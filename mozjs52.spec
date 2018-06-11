@@ -12,7 +12,7 @@
 
 Name:           mozjs%{major}
 Version:        52.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        SpiderMonkey JavaScript library
 
 License:        MPLv2.0 and MPLv1.1 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+ and AFL and ASL 2.0
@@ -91,6 +91,9 @@ pushd ../..
 %endif
 
 %patch304 -p1 -b .1253216
+
+# make sure we don't ever accidentally link against bundled security libs
+rm -rf security/
 popd
 
 # Remove zlib directory (to be sure using system version)
@@ -180,6 +183,10 @@ ln -s libmozjs-%{major}.so.0 %{buildroot}%{_libdir}/libmozjs-%{major}.so
 %{_includedir}/mozjs-%{major}/
 
 %changelog
+* Mon Jun 11 2018 Ray Strode <rstrode@redhat.com> - 52.8.0-2
+- safeguard against linking against bundled nss
+  Related: #1563708
+
 * Fri May 11 2018 Kalev Lember <klember@redhat.com> - 52.8.0-1
 - Update to 52.8.0
 - Fix the build on ppc
